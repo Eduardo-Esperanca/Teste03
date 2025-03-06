@@ -1,0 +1,1349 @@
+<!DOCTYPE html> 
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <!-- Modificar a meta tag viewport para garantir escala correta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Passagem de Turno</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Adicionar CSS para usar a variável --vh para altura */
+        :root {
+            --primary-color: #D10000;
+            --primary-hover: #FF0000;
+            --primary-light: #FFEBEB;
+            --accent-color: #0EA5E9;
+            --text-color: #333333;
+            --light-bg: #FFF5F5;
+            --white: #FFFFFF;
+            --error: #ea384c;
+            --success: #10B981;
+            --warning: #F97316;
+            --border-radius: 8px;
+            --box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --vh: 1vh;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        /* Modificar o estilo do body para garantir que ocupe 100% da altura da tela */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--text-color);
+            min-height: 100vh;
+            min-height: calc(100 * var(--vh));
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overscroll-behavior-y: contain;
+            overflow-x: hidden; /* Previne scroll horizontal */
+        }
+
+        /* Background overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp_Image_2025-03-04_at_01.48.43-removebg-preview-rkfGZRKb2M32xe0Uy7bQWAMCmKn40d.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Modificar o estilo dos containers para ocuparem mais espaço */
+        .container {
+            display: none;
+            width: 100%;
+            max-width: 100%;
+            height: calc(100 * var(--vh));
+            margin: 0; /* Remover margens */
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--box-shadow);
+            border-radius: 0; /* Remover bordas arredondadas para tela cheia */
+            padding: 30px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards;
+            position: relative;
+            overflow-y: auto; /* Adicionar scroll vertical quando necessário */
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(209, 0, 0, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, var(--primary-color), #FF3333);
+            color: var(--white);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(209, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 13px;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #FF3333, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(209, 0, 0, 0.4);
+        }
+
+        button.secondary {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(209, 0, 0, 0.1);
+            border: 1px solid rgba(209, 0, 0, 0.2);
+        }
+
+        button.secondary:hover {
+            background: #FFD6D6;
+            box-shadow: 0 6px 15px rgba(209, 0, 0, 0.2);
+        }
+
+        button.danger {
+            background-color: var(--error);
+        }
+
+        button.warning {
+            background-color: var(--warning);
+        }
+
+        button.success {
+            background: linear-gradient(135deg, #0E9F6E, #10B981);
+            box-shadow: 0 4px 10px rgba(14, 159, 110, 0.3);
+        }
+
+        button.success:hover {
+            background: linear-gradient(135deg, #10B981, #0E9F6E);
+            box-shadow: 0 6px 15px rgba(14, 159, 110, 0.4);
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sector-area {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .entry-card {
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .entry-card p {
+            margin: 8px 0;
+        }
+
+        .entry-card .status {
+            font-weight: bold;
+        }
+
+        .entry-card .status.feito {
+            color: var(--success);
+        }
+
+        .entry-card .status.pendente {
+            color: var(--warning);
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .tab-buttons button {
+            background: none;
+            color: var(--text-color);
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            border-bottom: 3px solid transparent;
+            box-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .tab-buttons button.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            background: rgba(209, 0, 0, 0.1);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            padding: 30px;
+            text-align: center;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Photo upload */
+        .photo-upload {
+            margin-bottom: 15px;
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 200px;
+            border-radius: var(--border-radius);
+            object-fit: cover;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .photo-upload-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border: 2px dashed #ddd;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .photo-upload-btn:hover {
+            background-color: #eee;
+            border-color: #ccc;
+        }
+
+        .photo-upload-btn i {
+            font-size: 24px;
+            color: #999;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Photo modal */
+        .photo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .photo-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: var(--border-radius);
+        }
+
+        .photo-modal.active {
+            display: flex;
+        }
+
+        /* Edit modal */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .edit-modal.active {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .edit-modal-content h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .edit-modal-content .button-row {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Data retention notice */
+        .data-retention-notice {
+            background-color: rgba(249, 115, 22, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #666;
+            text-align: left;
+            border-radius: var(--border-radius);
+        }
+
+        /* Pull to refresh indicator */
+        .pull-to-refresh {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pull-to-refresh.visible {
+            opacity: 1;
+        }
+
+        .pull-to-refresh .refresh-icon {
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Adicionar media query para desktop */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                margin: 0;
+                padding: 40px;
+            }
+        }
+
+        /* Ajustar media query para dispositivos móveis */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 0;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+            
+            body {
+                align-items: flex-start; /* Alinhar ao topo em dispositivos móveis */
+            }
+        }
+
+        /* Ajustar o estilo do welcome-container para preencher a tela */
+        #welcome-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Welcome screen styles */
+        #welcome-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .welcome-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .welcome-image {
+            width: 200px;
+            height: auto;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .welcome-button {
+            background: linear-gradient(135deg, #8B0000, #FF0000) !important;
+            color: white !important;
+            padding: 15px 40px !important;
+            font-size: 1.2rem !important;
+            border-radius: 30px !important;
+            transition: all 0.3s ease !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3) !important;
+            text-transform: none !important;
+            letter-spacing: normal !important;
+        }
+
+        .welcome-button:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4) !important;
+        }
+
+        .welcome-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .welcome-button:hover i {
+            transform: translateX(5px);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Container -->
+    <div id="welcome-container" class="container active" style="height: 100vh; width: 100vw; margin: 0; padding: 0;">
+        <div class="welcome-content">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp_Image_2025-03-04_at_01.48.43-removebg-preview-2bpTcDRBqzkSe3v9cS9p9hpZOBbgDI.png" alt="Pena" class="welcome-image">
+            <button id="start-button" class="welcome-button">
+                <span>Começar</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Container -->
+    <div id="login-container" class="container">
+        <div class="pull-to-refresh">
+            <i class="fas fa-sync-alt refresh-icon"></i>
+            <span>Atualizando...</span>
+        </div>
+        <h1><i class="fas fa-exchange-alt"></i> Passagem de Turno</h1>
+        <div class="input-group">
+            <label for="email">Email ou Nome</label>
+            <input type="email" id="email" placeholder="Digite seu email ou nome completo">
+        </div>
+        <div class="input-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="Digite sua senha">
+        </div>
+        <button onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        <div class="button-row">
+            <button class="secondary" onclick="switchView('forgot-password-container')"><i class="fas fa-key"></i> Esqueceu a Senha?</button>
+            <button class="secondary" onclick="switchView('register-container')"><i class="fas fa-user-plus"></i> Cadastrar</button>
+        </div>
+    </div>
+
+    <!-- Forgot Password Container -->
+    <div id="forgot-password-container" class="container">
+        <div class="pull-to-refresh">
+            <i class="fas fa-sync-alt refresh-icon"></i>
+            <span>Atualizando...</span>
+        </div>
+        <h1><i class="fas fa-unlock-alt"></i> Recuperar Senha</h1>
+        <div class="input-group">
+            <label for="forgot-email">Email</label>
+            <input type="email" id="forgot-email" placeholder="Digite seu e-mail cadastrado">
+        </div>
+        <button onclick="sendRecoveryEmail()"><i class="fas fa-paper-plane"></i> Enviar</button>
+        <button class="secondary" onclick="switchView('login-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
+    </div>
+
+    <!-- Register Container -->
+    <div id="register-container" class="container">
+        <div class="pull-to-refresh">
+            <i class="fas fa-sync-alt refresh-icon"></i>
+            <span>Atualizando...</span>
+        </div>
+        <h1><i class="fas fa-user-plus"></i> Cadastrar Usuário</h1>
+        <div class="input-group">
+            <label for="register-name">Nome Completo</label>
+            <input type="text" id="register-name" placeholder="Digite seu nome completo">
+        </div>
+        <div class="input-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" placeholder="Digite seu email">
+        </div>
+        <div class="input-group">
+            <label for="register-password">Senha</label>
+            <input type="password" id="register-password" placeholder="Crie uma senha segura">
+        </div>
+        <button onclick="registerUser()"><i class="fas fa-user-check"></i> Registrar</button>
+        <button class="secondary" onclick="switchView('login-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
+    </div>
+
+    <!-- Main Container -->
+    <div id="main-container" class="container">
+        <div class="pull-to-refresh">
+            <i class="fas fa-sync-alt refresh-icon"></i>
+            <span>Atualizando...</span>
+        </div>
+        <h1><i class="fas fa-clipboard-list"></i> Passagem de Turno</h1>
+        <div class="button-row">
+            <button onclick="switchView('view-container')"><i class="fas fa-list"></i> Ver Entradas</button>
+            <button class="secondary" onclick="switchView('login-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
+        </div>
+        
+        <!-- Data retention notice -->
+        <div class="data-retention-notice">
+            <i class="fas fa-info-circle"></i> As informações adicionadas serão automaticamente apagadas após 30 dias.
+        </div>
+        
+        <div class="input-group">
+            <label for="setor">Setor</label>
+            <select id="setor">
+                <option value="recebimento">Recebimento</option>
+                <option value="expedicao">Expedição</option>
+                <option value="separacao">Separação</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label for="nome">Nome do Responsável</label>
+            <input type="text" id="nome" placeholder="Digite seu nome">
+        </div>
+        
+        <div class="input-group">
+            <label for="data">Data</label>
+            <input type="date" id="data">
+        </div>
+        
+        <div class="input-group">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" placeholder="Descreva as atividades realizadas ou pendentes..."></textarea>
+        </div>
+        
+        <div class="input-group">
+            <label for="status">Status</label>
+            <select id="status">
+                <option value="pendente">Pendente</option>
+                <option value="feito">Feito</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label>Foto (Opcional)</label>
+            <div class="photo-upload">
+                <label for="photo-input" class="photo-upload-btn">
+                    <i class="fas fa-camera"></i>
+                    <span>Clique para adicionar uma foto</span>
+                </label>
+                <input type="file" id="photo-input" accept="image/*" style="display: none;">
+                <img id="photo-preview" class="photo-preview">
+            </div>
+        </div>
+        
+        <button class="success" onclick="addEntry()"><i class="fas fa-plus-circle"></i> Adicionar Entrada</button>
+    </div>
+
+    <!-- View Entries Container -->
+    <div id="view-container" class="container">
+        <div class="pull-to-refresh">
+            <i class="fas fa-sync-alt refresh-icon"></i>
+            <span>Atualizando...</span>
+        </div>
+        <h1><i class="fas fa-clipboard-check"></i> Entradas Cadastradas</h1>
+        <div class="button-row">
+            <button onclick="switchView('main-container')"><i class="fas fa-plus"></i> Nova Entrada</button>
+            <button class="secondary" onclick="switchView('main-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
+        </div>
+        
+        <!-- Data retention notice -->
+        <div class="data-retention-notice">
+            <i class="fas fa-info-circle"></i> As informações adicionadas serão automaticamente apagadas após 30 dias.
+        </div>
+        
+        <div class="tab-buttons">
+            <button id="btn-recebimento" onclick="showSectorEntries('recebimento')"><i class="fas fa-dolly"></i> Recebimento</button>
+            <button id="btn-expedicao" onclick="showSectorEntries('expedicao')"><i class="fas fa-shipping-fast"></i> Expedição</button>
+            <button id="btn-separacao" onclick="showSectorEntries('separacao')"><i class="fas fa-box-open"></i> Separação</button>
+        </div>
+
+        <div id="sector-entries">
+            <div id="recebimento-entries" class="sector-area" style="display: none;"></div>
+            <div id="expedicao-entries" class="sector-area" style="display: none;"></div>
+            <div id="separacao-entries" class="sector-area" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Photo Modal -->
+    <div id="photo-modal" class="photo-modal" onclick="closePhotoModal()">
+        <img id="modal-image" src="/placeholder.svg" alt="Foto ampliada">
+    </div>
+    
+    <!-- Edit Description Modal -->
+    <div id="edit-modal" class="edit-modal">
+        <div class="edit-modal-content">
+            <h2><i class="fas fa-edit"></i> Editar Descrição</h2>
+            <div class="input-group">
+                <label for="edit-descricao">Descrição</label>
+                <textarea id="edit-descricao" rows="6"></textarea>
+            </div>
+            <div class="button-row">
+                <button class="secondary" onclick="closeEditModal()"><i class="fas fa-times"></i> Cancelar</button>
+                <button class="success" onclick="saveEditedDescription()"><i class="fas fa-save"></i> Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the application with stored data (if any)
+        let entries = {
+            recebimento: [],
+            expedicao: [],
+            separacao: []
+        };
+        
+        // Variables for editing
+        let currentEditSector = '';
+        let currentEditId = '';
+        
+        // Variáveis para o pull-to-refresh
+        let touchStartY = 0;
+        let touchEndY = 0;
+        let currentActiveContainer = null;
+        let currentActiveSector = 'recebimento';
+        let isRefreshing = false;
+
+        // Load data from localStorage if available
+        function loadStoredData() {
+            const storedEntries = localStorage.getItem('turnoEntries');
+            if (storedEntries) {
+                entries = JSON.parse(storedEntries);
+            }
+            
+            // Check for entries older than 30 days and remove them
+            const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+            let entriesRemoved = false;
+            
+            for (const sector in entries) {
+                const filteredEntries = entries[sector].filter(entry => {
+                    return entry.timestamp > thirtyDaysAgo;
+                });
+                
+                if (filteredEntries.length < entries[sector].length) {
+                    entriesRemoved = true;
+                }
+                
+                entries[sector] = filteredEntries;
+            }
+            
+            if (entriesRemoved) {
+                saveData();
+                showAlert('Algumas entradas antigas foram removidas automaticamente (30 dias).', 'info');
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('turnoEntries', JSON.stringify(entries));
+        }
+
+        // Call loadStoredData when the page loads
+        loadStoredData();
+
+        // Photo handling
+        const photoInput = document.getElementById('photo-input');
+        const photoPreview = document.getElementById('photo-preview');
+        let currentPhotoData = null;
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    photoPreview.src = event.target.result;
+                    photoPreview.style.display = 'block';
+                    currentPhotoData = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Função para iniciar o aplicativo (transição da tela de boas-vindas para login)
+        function startApp() {
+            console.log("startApp function called");
+            // Oculta a tela de boas-vindas com animação de saída
+            const welcomeContainer = document.getElementById('welcome-container');
+            welcomeContainer.style.opacity = '0';
+            welcomeContainer.style.transform = 'translateY(20px)';
+            
+            // Após a animação de saída, remove a classe active e mostra o login
+            setTimeout(() => {
+                welcomeContainer.classList.remove('active');
+                welcomeContainer.style.display = 'none'; // Garante que o container fique invisível
+                
+                // Mostra a tela de login
+                const loginContainer = document.getElementById('login-container');
+                loginContainer.classList.add('active');
+                loginContainer.style.display = 'block';
+                
+                // Aplica a animação de entrada na tela de login
+                setTimeout(() => {
+                    loginContainer.style.opacity = '1';
+                    loginContainer.style.transform = 'translateY(0)';
+                }, 10);
+            }, 300);
+        }
+
+        // Adiciona o event listener para o botão de começar
+        document.addEventListener('DOMContentLoaded', function() {
+            const startButton = document.getElementById('start-button');
+            if (startButton) {
+                startButton.addEventListener('click', function() {
+                    console.log("Botão Começar clicado");
+                    startApp();
+                });
+            }
+            
+            // Inicializa os eventos de touch para pull-to-refresh
+            initPullToRefresh();
+
+            // Adicionar ao final da função document.addEventListener('DOMContentLoaded', function() {...})
+            // Garantir que a aplicação ocupe toda a tela
+            function adjustFullScreen() {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+                
+                // Ajustar altura dos containers
+                document.querySelectorAll('.container').forEach(container => {
+                    container.style.height = `calc(100 * var(--vh))`;
+                });
+            }
+
+            // Chamar a função quando a página carrega e quando a janela é redimensionada
+            adjustFullScreen();
+            window.addEventListener('resize', adjustFullScreen);
+        });
+
+        function switchView(containerId) {
+            // Add exit animation to current active container
+            const currentActive = document.querySelector('.container.active');
+            if (currentActive) {
+                currentActive.style.opacity = '0';
+                currentActive.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    currentActive.classList.remove('active');
+                    currentActive.style.display = 'none'; // Garante que o container anterior fique invisível
+                    
+                    // Show new container with entrance animation
+                    const newContainer = document.getElementById(containerId);
+                    newContainer.classList.add('active');
+                    newContainer.style.display = 'block'; // Garante que o novo container fique visível
+                    newContainer.style.opacity = '0';
+                    newContainer.style.transform = 'translateY(20px)';
+                    
+                    // Atualiza o container ativo atual para o pull-to-refresh
+                    currentActiveContainer = containerId;
+                    
+                    // Trigger reflow
+                    void newContainer.offsetWidth;
+                    
+                    // Apply animation
+                    newContainer.style.opacity = '1';
+                    newContainer.style.transform = 'translateY(0)';
+                    
+                    // Set active tab if in view container
+                    if (containerId === 'view-container') {
+                        showSectorEntries('recebimento');
+                        currentActiveSector = 'recebimento';
+                    }
+                }, 300);
+            } else {
+                // If no active container, just show the new one
+                document.getElementById(containerId).classList.add('active');
+                currentActiveContainer = containerId;
+            }
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email && password) {
+                // Show loading state on button
+                const loginButton = document.querySelector('#login-container button');
+                const originalText = loginButton.innerHTML;
+                loginButton.innerHTML = '<div class="loading"></div> Entrando...';
+                loginButton.disabled = true;
+                
+                // Simulate authentication delay
+                setTimeout(() => {
+                    switchView('main-container');
+                    
+                    // Reset button state
+                    loginButton.innerHTML = originalText;
+                    loginButton.disabled = false;
+                    
+                    // Set today's date as default
+                    document.getElementById('data').valueAsDate = new Date();
+
+                    // Store authentication state
+                    localStorage.setItem('isAuthenticated', 'true');
+                }, 1000);
+            } else {
+                showAlert('Por favor, preencha todos os campos.', 'error');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('isAuthenticated');
+            switchView('login-container');
+        }
+
+        function showAlert(message, type = 'info') {
+            // Create alert element
+            const alertDiv = document.createElement('div');
+            alertDiv.textContent = message;
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '20px';
+            alertDiv.style.left = '50%';
+            alertDiv.style.transform = 'translateX(-50%)';
+            alertDiv.style.padding = '12px 20px';
+            alertDiv.style.borderRadius = '8px';
+            alertDiv.style.zIndex = '1000';
+            alertDiv.style.maxWidth = '80%';
+            alertDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            
+            // Set color based on alert type
+            if (type === 'error') {
+                alertDiv.style.backgroundColor = 'var(--error)';
+            } else if (type === 'success') {
+                alertDiv.style.backgroundColor = 'var(--success)';
+            } else if (type === 'warning') {
+                alertDiv.style.backgroundColor = 'var(--warning)';
+            } else {
+                alertDiv.style.backgroundColor = 'var(--primary-color)';
+            }
+            
+            alertDiv.style.color = 'white';
+            
+            // Add to body
+            document.body.appendChild(alertDiv);
+            
+            // Remove after delay
+            setTimeout(() => {
+                alertDiv.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(alertDiv), 300);
+            }, 3000);
+        }
+
+        function sendRecoveryEmail() {
+            const email = document.getElementById('forgot-email').value;
+            if (email) {
+                // Show loading state
+                const button = document.querySelector('#forgot-password-container button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<div class="loading"></div> Enviando...';
+                button.disabled = true;
+                
+                // Simulate server request
+                setTimeout(() => {
+                    showAlert(`E-mail de recuperação enviado para ${email}`, 'success');
+                    switchView('login-container');
+                    
+                    // Reset button and field
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    document.getElementById('forgot-email').value = '';
+                }, 1500);
+            } else {
+                showAlert('Por favor, insira um e-mail válido.', 'error');
+            }
+        }
+
+        function registerUser() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            if (name && email && password) {
+                // Show loading state
+                const button = document.querySelector('#register-container button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<div class="loading"></div> Registrando...';
+                button.disabled = true;
+                
+                // Simulate registration
+                setTimeout(() => {
+                    showAlert('Usuário registrado com sucesso!', 'success');
+                    switchView('login-container');
+                    
+                    // Reset button and fields
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    document.getElementById('register-name').value = '';
+                    document.getElementById('register-email').value = '';
+                    document.getElementById('register-password').value = '';
+                }, 1500);
+            } else {
+                showAlert('Por favor, preencha todos os campos.', 'error');
+            }
+        }
+
+        function addEntry() {
+            const setor = document.getElementById('setor').value;
+            const nome = document.getElementById('nome').value;
+            const data = document.getElementById('data').value;
+            const descricao = document.getElementById('descricao').value;
+            const status = document.getElementById('status').value;
+
+            if (setor && nome && data && descricao && status) {
+                // Format date in a more readable way
+                const formattedDate = new Date(data).toLocaleDateString('pt-BR');
+                
+                // Add entry to the beginning of the array
+                entries[setor].unshift({ 
+                    id: Date.now().toString(),
+                    nome, 
+                    data: formattedDate, 
+                    descricao, 
+                    status,
+                    timestamp: Date.now(),
+                    photo: currentPhotoData
+                });
+                
+                // Save to localStorage
+                saveData();
+                
+                // Show success message
+                showAlert('Entrada adicionada com sucesso!', 'success');
+                
+                // Reset form fields
+                document.getElementById('nome').value = '';
+                document.getElementById('descricao').value = '';
+                document.getElementById('status').value = 'pendente';
+                
+                // Reset photo preview and data
+                const photoPreview = document.getElementById('photo-preview');
+                photoPreview.style.display = 'none';
+                photoPreview.src = '';
+                currentPhotoData = null;
+                
+                // Reset file input
+                const photoInput = document.getElementById('photo-input');
+                photoInput.value = '';
+                
+                // Set today's date
+                document.getElementById('data').valueAsDate = new Date();
+                
+                // Opcional: Rolar para o topo do formulário
+                document.getElementById('main-container').scrollTop = 0;
+            } else {
+                showAlert('Por favor, preencha todos os campos obrigatórios.', 'error');
+            }
+        }
+
+        function showSectorEntries(sector) {
+            // Set active tab styling
+            document.querySelectorAll('.tab-buttons button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(`btn-${sector}`).classList.add('active');
+            
+            // Atualiza o setor ativo atual para o pull-to-refresh
+            currentActiveSector = sector;
+            
+            // Hide all sector areas
+            document.querySelectorAll('.sector-area').forEach(area => {
+                area.style.display = 'none';
+            });
+
+            // Get the appropriate sector area
+            const sectorArea = document.getElementById(`${sector}-entries`);
+            
+            // Clear previous entries
+            sectorArea.innerHTML = '';
+
+            // Check if there are entries for this sector
+            if (entries[sector].length) {
+                // Create and append entry cards for each entry
+                entries[sector].forEach((entry, index) => {
+                    const entryCard = document.createElement('div');
+                    entryCard.className = 'entry-card';
+                    
+                    let photoHtml = '';
+                    if (entry.photo) {
+                        photoHtml = `
+                            <div style="margin-top: 10px;">
+                                <img src="${entry.photo}" alt="Foto da entrada" 
+                                    style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                    onclick="openPhotoModal('${entry.photo}')">
+                            </div>
+                        `;
+                    }
+                    
+                    entryCard.innerHTML = `
+                        <p><strong><i class="fas fa-user"></i> Responsável:</strong> ${entry.nome}</p>
+                        <p><strong><i class="fas fa-calendar-alt"></i> Data:</strong> ${entry.data}</p>
+                        <p><strong><i class="fas fa-clipboard-list"></i> Descrição:</strong><br>${entry.descricao}</p>
+                        <p><strong><i class="fas fa-tasks"></i> Status:</strong> 
+                            <span class="status ${entry.status}">${entry.status === 'feito' ? 'Concluído' : 'Pendente'}</span>
+                        </p>
+                        ${photoHtml}
+                        <div class="button-row" style="justify-content: flex-start;">
+                            <button onclick="toggleStatus('${sector}', '${entry.id}')">
+                                ${entry.status === 'feito' 
+                                    ? '<i class="fas fa-clock"></i> Marcar como Pendente' 
+                                    : '<i class="fas fa-check-circle"></i> Marcar como Concluído'}
+                            </button>
+                            <button class="secondary" onclick="openEditModal('${sector}', '${entry.id}')">
+                                <i class="fas fa-edit"></i> Editar Descrição
+                            </button>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 8px;">
+                            <i class="fas fa-clock"></i> ${new Date(entry.timestamp).toLocaleTimeString()}
+                        </div>
+                    `;
+                    sectorArea.appendChild(entryCard);
+                });
+            } else {
+                // Show empty state
+                sectorArea.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard"></i>
+                        <p>Sem entradas cadastradas para o setor ${getSectorName(sector)}.</p>
+                        <button onclick="switchView('main-container')">
+                            <i class="fas fa-plus-circle"></i> Adicionar Entrada
+                        </button>
+                    </div>
+                `;
+            }
+            
+            // Show the sector area
+            sectorArea.style.display = 'block';
+        }
+
+        function getSectorName(sector) {
+            const sectorNames = {
+                'recebimento': 'Recebimento',
+                'expedicao': 'Expedição',
+                'separacao': 'Separação'
+            };
+            return sectorNames[sector] || sector;
+        }
+
+        function toggleStatus(sector, id) {
+            // Find the entry by id
+            const entryIndex = entries[sector].findIndex(entry => entry.id === id);
+            
+            if (entryIndex !== -1) {
+                // Toggle status between "feito" and "pendente"
+                const currentStatus = entries[sector][entryIndex].status;
+                entries[sector][entryIndex].status = currentStatus === "feito" ? "pendente" : "feito";
+                
+                // Save changes to localStorage
+                saveData();
+                
+                // Show status change confirmation
+                const newStatus = entries[sector][entryIndex].status === "feito" ? "Concluído" : "Pendente";
+                showAlert(`Status alterado para ${newStatus}`, 'success');
+                
+                // Update the display
+                showSectorEntries(sector);
+            }
+        }
+
+        function openPhotoModal(photoUrl) {
+            const modal = document.getElementById('photo-modal');
+            const modalImg = document.getElementById('modal-image');
+            
+            modalImg.src = photoUrl;
+            modal.classList.add('active');
+        }
+
+        function closePhotoModal() {
+            const modal = document.getElementById('photo-modal');
+            modal.classList.remove('active');
+        }
+        
+        // Edit description functions
+        function openEditModal(sector, id) {
+            // Find the entry
+            const entryIndex = entries[sector].findIndex(entry => entry.id === id);
+            
+            if (entryIndex !== -1) {
+                // Store current edit info
+                currentEditSector = sector;
+                currentEditId = id;
+                
+                // Set the current description in the edit textarea
+                document.getElementById('edit-descricao').value = entries[sector][entryIndex].descricao;
+                
+                // Show the modal
+                document.getElementById('edit-modal').classList.add('active');
+            }
+        }
+        
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+            // Clear edit state
+            currentEditSector = '';
+            currentEditId = '';
+        }
+        
+        function saveEditedDescription() {
+            if (currentEditSector && currentEditId) {
+                const newDescription = document.getElementById('edit-descricao').value;
+                
+                if (newDescription.trim() === '') {
+                    showAlert('A descrição não pode estar vazia.', 'error');
+                    return;
+                }
+                
+                // Find the entry
+                const entryIndex = entries[currentEditSector].findIndex(entry => entry.id === currentEditId);
+                
+                if (entryIndex !== -1) {
+                    // Update the description
+                    entries[currentEditSector][entryIndex].descricao = newDescription;
+                    
+                    // Save to localStorage
+                    saveData();
+                    
+                    // Show success message
+                    showAlert('Descrição atualizada com sucesso!', 'success');
+                    
+                    // Close the modal
+                    closeEditModal();
+                    
+                    // Update the display
+                    showSectorEntries(currentEditSector);
+                }
+            }
+        }
+
+        // Inicializa o pull-to-refresh
+        function initPullToRefresh() {
+            document.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (isRefreshing) return;
+                
+                touchEndY = e.touches[0].clientY;
+                const pullDistance = touchEndY - touchStartY;
+                
+                // Se o usuário puxou para baixo por pelo menos 60px
+                if (pullDistance > 60) {
+                    // Mostra o indicador de atualização
+                    const activeContainer = document.querySelector('.container.active');
+                    if (activeContainer) {
+                        const refreshIndicator = activeContainer.querySelector('.pull-to-refresh');
+                        if (refreshIndicator) {
+                            refreshIndicator.classList.add('visible');
+                        }
+                    }
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', function(e) {
+                const pullDistance = touchEndY - touchStartY;
+                
+                // Se o usuário puxou para baixo por pelo menos 60px
+                if (pullDistance > 60 && !isRefreshing) {
+                    refreshCurrentView();
+                }
+                
+                // Reset
+                touchStartY = 0;
+                touchEndY = 0;
+            }, { passive: true });
+        }
+
+        // Função para atualizar a visualização atual
+        function refreshCurrentView() {
+            if (isRefreshing) return;
+            isRefreshing = true;
+            
+            // Mostra o indicador de atualização
+            const activeContainer = document.querySelector('.container.active');
+            if (activeContainer) {
+                const refreshIndicator = activeContainer.querySelector('.pull-to-refresh');
+                if (refreshIndicator) {
+                    refreshIndicator.classList.add('visible');
+                }
+                
+                // Simula um tempo de atualização
+                setTimeout(() => {
+                    // Recarrega os dados do localStorage
+                    loadStoredData();
+                    
+                    // Atualiza a visualização atual com base no container ativo
+                    if (currentActiveContainer === 'view-container') {
+                        showSectorEntries(currentActiveSector);
+                    } else if (currentActiveContainer === 'main-container') {
+                        // Atualiza o formulário principal se necessário
+                        document.getElementById('data').valueAsDate = new Date();
+                    }
+                    
+                    // Esconde o indicador de atualização
+                    if (refreshIndicator) {
+                        refreshIndicator.classList.remove('visible');
+                    }
+                    
+                    // Mostra uma mensagem de sucesso
+                    showAlert('Atualizado com sucesso!', 'success');
+                    
+                    // Reset
+                    isRefreshing = false;
+                }, 1000);
+            } else {
+                isRefreshing = false;
+            }
+        }
+
+        // Check if user is authenticated
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded");
+            // Set today's date as default
+            const dateInput = document.getElementById('data');
+            if (dateInput) {
+                dateInput.valueAsDate = new Date();
+            }
+            
+            // Always show welcome screen first, regardless of authentication status
+            document.getElementById('welcome-container').classList.add('active');
+            document.getElementById('welcome-container').style.display = 'flex';
+            document.getElementById('welcome-container').style.opacity = '1';
+            document.getElementById('welcome-container').style.transform = 'translateY(0)';
+            
+            // Make sure all other containers are hidden
+            document.getElementById('login-container').classList.remove('active');
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('main-container').classList.remove('active');
+            document.getElementById('main-container').style.display = 'none';
+            
+            // Clear any previous authentication state to ensure proper flow
+            // Comment this line if you want to remember login state between sessions
+            localStorage.removeItem('isAuthenticated');
+        });
+    </script>
+</body>
+</html>
