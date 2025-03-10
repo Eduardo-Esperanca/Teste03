@@ -10,12 +10,12 @@
     <style>
         /* Adicionar CSS para usar a variável --vh para altura */
         :root {
-            --primary-color: #D10000;
-            --primary-hover: #FF0000;
-            --primary-light: #FFEBEB;
+            --primary-color: #0055B8;
+            --primary-hover: #0066DD;
+            --primary-light: #EBF5FF;
             --accent-color: #0EA5E9;
             --text-color: #333333;
-            --light-bg: #FFF5F5;
+            --light-bg: #F5F9FF;
             --white: #FFFFFF;
             --error: #ea384c;
             --success: #10B981;
@@ -56,7 +56,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp_Image_2025-03-04_at_01.48.43-removebg-preview-rkfGZRKb2M32xe0Uy7bQWAMCmKn40d.png');
+            background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/een-8omZrRbOxXQn0SmInVT0jp5LUvRAs1.png');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
@@ -104,6 +104,7 @@
         .input-group {
             margin-bottom: 15px;
             text-align: left;
+            position: relative;
         }
 
         label {
@@ -126,7 +127,7 @@
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(209, 0, 0, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 85, 184, 0.2);
         }
 
         textarea {
@@ -139,7 +140,7 @@
             margin: 10px 5px;
             border: none;
             border-radius: var(--border-radius);
-            background: linear-gradient(135deg, var(--primary-color), #FF3333);
+            background: linear-gradient(135deg, var(--primary-color), #0066DD);
             color: var(--white);
             cursor: pointer;
             font-weight: 500;
@@ -147,28 +148,28 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(209, 0, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 85, 184, 0.3);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 13px;
         }
 
         button:hover {
-            background: linear-gradient(135deg, #FF3333, var(--primary-color));
+            background: linear-gradient(135deg, #0066DD, var(--primary-color));
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(209, 0, 0, 0.4);
+            box-shadow: 0 6px 15px rgba(0, 85, 184, 0.4);
         }
 
         button.secondary {
             background: var(--primary-light);
             color: var(--primary-color);
-            box-shadow: 0 4px 10px rgba(209, 0, 0, 0.1);
-            border: 1px solid rgba(209, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 85, 184, 0.1);
+            border: 1px solid rgba(0, 85, 184, 0.2);
         }
 
         button.secondary:hover {
-            background: #FFD6D6;
-            box-shadow: 0 6px 15px rgba(209, 0, 0, 0.2);
+            background: #D6E9FF;
+            box-shadow: 0 6px 15px rgba(0, 85, 184, 0.2);
         }
 
         button.danger {
@@ -254,7 +255,7 @@
         .tab-buttons button.active {
             color: var(--primary-color);
             border-bottom: 3px solid var(--primary-color);
-            background: rgba(209, 0, 0, 0.1);
+            background: rgba(0, 85, 184, 0.1);
         }
 
         .loading {
@@ -423,6 +424,20 @@
             animation: spin 1s linear infinite;
         }
 
+        /* Password toggle icon */
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            cursor: pointer;
+            color: #777;
+            z-index: 10;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+
         /* Adicionar media query para desktop */
         @media (min-width: 1024px) {
             .container {
@@ -484,7 +499,7 @@
         }
 
         .welcome-button {
-            background: linear-gradient(135deg, #8B0000, #FF0000) !important;
+            background: linear-gradient(135deg, #003B80, #0066DD) !important;
             color: white !important;
             padding: 15px 40px !important;
             font-size: 1.2rem !important;
@@ -493,14 +508,14 @@
             display: flex !important;
             align-items: center !important;
             gap: 10px !important;
-            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3) !important;
+            box-shadow: 0 4px 15px rgba(0, 59, 128, 0.3) !important;
             text-transform: none !important;
             letter-spacing: normal !important;
         }
 
         .welcome-button:hover {
             transform: translateY(-3px) !important;
-            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4) !important;
+            box-shadow: 0 6px 20px rgba(0, 59, 128, 0.4) !important;
         }
 
         .welcome-button i {
@@ -509,6 +524,77 @@
 
         .welcome-button:hover i {
             transform: translateX(5px);
+        }
+
+        /* Estilo para configurações de notificação */
+        .notification-settings {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: var(--border-radius);
+            text-align: left;
+        }
+
+        .notification-settings h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        .notification-toggle {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .notification-toggle label {
+            margin-left: 10px;
+            margin-bottom: 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
 
         @keyframes float {
@@ -528,7 +614,7 @@
     <!-- Welcome Container -->
     <div id="welcome-container" class="container active" style="height: 100vh; width: 100vw; margin: 0; padding: 0;">
         <div class="welcome-content">
-            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp_Image_2025-03-04_at_01.48.43-removebg-preview-2bpTcDRBqzkSe3v9cS9p9hpZOBbgDI.png" alt="Pena" class="welcome-image">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/een-8omZrRbOxXQn0SmInVT0jp5LUvRAs1.png" alt="Pena" class="welcome-image">
             <button id="start-button" class="welcome-button">
                 <span>Começar</span>
                 <i class="fas fa-arrow-right"></i>
@@ -550,6 +636,7 @@
         <div class="input-group">
             <label for="password">Senha</label>
             <input type="password" id="password" placeholder="Digite sua senha">
+            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('password')"></i>
         </div>
         <button onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
         <div class="button-row">
@@ -591,6 +678,18 @@
         <div class="input-group">
             <label for="register-password">Senha</label>
             <input type="password" id="register-password" placeholder="Crie uma senha segura">
+            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('register-password')"></i>
+        </div>
+        <!-- Adicionando opção de notificações por email -->
+        <div class="notification-settings">
+            <h3><i class="fas fa-bell"></i> Notificações</h3>
+            <div class="notification-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="email-notifications" checked>
+                    <span class="slider"></span>
+                </label>
+                <label for="email-notifications">Receber notificações por email</label>
+            </div>
         </div>
         <button onclick="registerUser()"><i class="fas fa-user-check"></i> Registrar</button>
         <button class="secondary" onclick="switchView('login-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
@@ -604,8 +703,9 @@
         </div>
         <h1><i class="fas fa-clipboard-list"></i> Passagem de Turno</h1>
         <div class="button-row">
-            <button onclick="switchView('view-container')"><i class="fas fa-list"></i> Ver Entradas</button>
-            <button class="secondary" onclick="switchView('login-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            <button onclick="switchView('view-container')"><i class="fas fa-list"></i> Ver Atividades</button>
+            <button onclick="switchView('settings-container')"><i class="fas fa-cog"></i> Configurações</button>
+            <button class="secondary" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
         
         <!-- Data retention notice -->
@@ -660,13 +760,61 @@
         <button class="success" onclick="addEntry()"><i class="fas fa-plus-circle"></i> Adicionar Entrada</button>
     </div>
 
+    <!-- Settings Container -->
+    <div id="settings-container" class="container">
+        <div class="pull-to-refresh">
+            <i class="fas fa-sync-alt refresh-icon"></i>
+            <span>Atualizando...</span>
+        </div>
+        <h1><i class="fas fa-cog"></i> Configurações</h1>
+        <div class="button-row">
+            <button class="secondary" onclick="switchView('main-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
+        </div>
+        
+        <div class="notification-settings">
+            <h3><i class="fas fa-bell"></i> Notificações</h3>
+            <div class="notification-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="settings-email-notifications" checked>
+                    <span class="slider"></span>
+                </label>
+                <label for="settings-email-notifications">Receber notificações por email</label>
+            </div>
+            
+            <div class="input-group" style="margin-top: 15px;">
+                <label for="notification-email">Email para notificações</label>
+                <input type="email" id="notification-email" placeholder="Digite seu email para notificações">
+            </div>
+            
+            <div class="notification-toggle" style="margin-top: 15px;">
+                <label class="switch">
+                    <input type="checkbox" id="notify-new-entries" checked>
+                    <span class="slider"></span>
+                </label>
+                <label for="notify-new-entries">Novas entradas</label>
+            </div>
+            
+            <div class="notification-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="notify-status-changes" checked>
+                    <span class="slider"></span>
+                </label>
+                <label for="notify-status-changes">Mudanças de status</label>
+            </div>
+            
+            <button class="success" onclick="saveNotificationSettings()" style="margin-top: 15px;">
+                <i class="fas fa-save"></i> Salvar Configurações
+            </button>
+        </div>
+    </div>
+
     <!-- View Entries Container -->
     <div id="view-container" class="container">
         <div class="pull-to-refresh">
             <i class="fas fa-sync-alt refresh-icon"></i>
             <span>Atualizando...</span>
         </div>
-        <h1><i class="fas fa-clipboard-check"></i> Entradas Cadastradas</h1>
+        <h1><i class="fas fa-clipboard-check"></i> Registro de Atividades</h1>
         <div class="button-row">
             <button onclick="switchView('main-container')"><i class="fas fa-plus"></i> Nova Entrada</button>
             <button class="secondary" onclick="switchView('main-container')"><i class="fas fa-arrow-left"></i> Voltar</button>
@@ -692,6 +840,7 @@
 
     <!-- Photo Modal -->
     <div id="photo-modal" class="photo-modal" onclick="closePhotoModal()">
+        <img id="modal-image" src="/placeholder.svg" alt  onclick="closePhotoModal()">
         <img id="modal-image" src="/placeholder.svg" alt="Foto ampliada">
     </div>
     
@@ -729,11 +878,37 @@
         let currentActiveSector = 'recebimento';
         let isRefreshing = false;
 
+        // Variáveis para notificações por email
+        let users = [];
+        let currentUser = null;
+
+        // Função para alternar a visibilidade da senha
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = passwordInput.nextElementSibling;
+            
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+
         // Load data from localStorage if available
         function loadStoredData() {
             const storedEntries = localStorage.getItem('turnoEntries');
             if (storedEntries) {
                 entries = JSON.parse(storedEntries);
+            }
+            
+            // Carregar usuários cadastrados
+            const storedUsers = localStorage.getItem('turnoUsers');
+            if (storedUsers) {
+                users = JSON.parse(storedUsers);
             }
             
             // Check for entries older than 30 days and remove them
@@ -761,6 +936,7 @@
         // Save data to localStorage
         function saveData() {
             localStorage.setItem('turnoEntries', JSON.stringify(entries));
+            localStorage.setItem('turnoUsers', JSON.stringify(users));
         }
 
         // Call loadStoredData when the page loads
@@ -873,6 +1049,14 @@
                         showSectorEntries('recebimento');
                         currentActiveSector = 'recebimento';
                     }
+                    
+                    // Preencher campos de configurações se estiver indo para settings
+                    if (containerId === 'settings-container' && currentUser) {
+                        document.getElementById('settings-email-notifications').checked = currentUser.emailNotifications !== false;
+                        document.getElementById('notification-email').value = currentUser.email || '';
+                        document.getElementById('notify-new-entries').checked = currentUser.notifyNewEntries !== false;
+                        document.getElementById('notify-status-changes').checked = currentUser.notifyStatusChanges !== false;
+                    }
                 }, 300);
             } else {
                 // If no active container, just show the new one
@@ -892,19 +1076,31 @@
                 loginButton.innerHTML = '<div class="loading"></div> Entrando...';
                 loginButton.disabled = true;
                 
+                // Verificar se o usuário existe
+                const user = users.find(u => (u.email === email || u.name === email) && u.password === password);
+                
                 // Simulate authentication delay
                 setTimeout(() => {
-                    switchView('main-container');
+                    if (user) {
+                        currentUser = user;
+                        switchView('main-container');
+                        
+                        // Set today's date as default
+                        document.getElementById('data').valueAsDate = new Date();
+                        
+                        // Preencher o nome do usuário no formulário
+                        document.getElementById('nome').value = user.name;
+
+                        // Store authentication state
+                        localStorage.setItem('isAuthenticated', 'true');
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                    } else {
+                        showAlert('Email/nome ou senha incorretos.', 'error');
+                    }
                     
                     // Reset button state
                     loginButton.innerHTML = originalText;
                     loginButton.disabled = false;
-                    
-                    // Set today's date as default
-                    document.getElementById('data').valueAsDate = new Date();
-
-                    // Store authentication state
-                    localStorage.setItem('isAuthenticated', 'true');
                 }, 1000);
             } else {
                 showAlert('Por favor, preencha todos os campos.', 'error');
@@ -913,6 +1109,8 @@
 
         function handleLogout() {
             localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('currentUser');
+            currentUser = null;
             switchView('login-container');
         }
 
@@ -962,10 +1160,17 @@
                 button.innerHTML = '<div class="loading"></div> Enviando...';
                 button.disabled = true;
                 
+                // Verificar se o email existe
+                const userExists = users.some(u => u.email === email);
+                
                 // Simulate server request
                 setTimeout(() => {
-                    showAlert(`E-mail de recuperação enviado para ${email}`, 'success');
-                    switchView('login-container');
+                    if (userExists) {
+                        showAlert(`E-mail de recuperação enviado para ${email}`, 'success');
+                        switchView('login-container');
+                    } else {
+                        showAlert('Email não encontrado no sistema.', 'error');
+                    }
                     
                     // Reset button and field
                     button.innerHTML = originalText;
@@ -981,13 +1186,36 @@
             const name = document.getElementById('register-name').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
+            const emailNotifications = document.getElementById('email-notifications').checked;
             
             if (name && email && password) {
+                // Verificar se o email já está cadastrado
+                if (users.some(u => u.email === email)) {
+                    showAlert('Este email já está cadastrado.', 'error');
+                    return;
+                }
+                
                 // Show loading state
                 const button = document.querySelector('#register-container button');
                 const originalText = button.innerHTML;
                 button.innerHTML = '<div class="loading"></div> Registrando...';
                 button.disabled = true;
+                
+                // Criar novo usuário
+                const newUser = {
+                    id: Date.now().toString(),
+                    name,
+                    email,
+                    password,
+                    emailNotifications,
+                    notifyNewEntries: true,
+                    notifyStatusChanges: true,
+                    createdAt: Date.now()
+                };
+                
+                // Adicionar à lista de usuários
+                users.push(newUser);
+                saveData();
                 
                 // Simulate registration
                 setTimeout(() => {
@@ -1017,25 +1245,31 @@
                 // Format date in a more readable way
                 const formattedDate = new Date(data).toLocaleDateString('pt-BR');
                 
-                // Add entry to the beginning of the array
-                entries[setor].unshift({ 
+                // Criar nova entrada
+                const newEntry = { 
                     id: Date.now().toString(),
                     nome, 
                     data: formattedDate, 
                     descricao, 
                     status,
                     timestamp: Date.now(),
-                    photo: currentPhotoData
-                });
+                    photo: currentPhotoData,
+                    createdBy: currentUser ? currentUser.id : null
+                };
+                
+                // Add entry to the beginning of the array
+                entries[setor].unshift(newEntry);
                 
                 // Save to localStorage
                 saveData();
+                
+                // Enviar notificações por email para usuários que optaram por receber
+                sendEmailNotifications(setor, newEntry, 'new');
                 
                 // Show success message
                 showAlert('Entrada adicionada com sucesso!', 'success');
                 
                 // Reset form fields
-                document.getElementById('nome').value = '';
                 document.getElementById('descricao').value = '';
                 document.getElementById('status').value = 'pendente';
                 
@@ -1127,9 +1361,9 @@
                 sectorArea.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-clipboard"></i>
-                        <p>Sem entradas cadastradas para o setor ${getSectorName(sector)}.</p>
+                        <p>Sem atividades cadastradas para o setor ${getSectorName(sector)}.</p>
                         <button onclick="switchView('main-container')">
-                            <i class="fas fa-plus-circle"></i> Adicionar Entrada
+                            <i class="fas fa-plus-circle"></i> Adicionar Atividade
                         </button>
                     </div>
                 `;
@@ -1155,14 +1389,18 @@
             if (entryIndex !== -1) {
                 // Toggle status between "feito" and "pendente"
                 const currentStatus = entries[sector][entryIndex].status;
-                entries[sector][entryIndex].status = currentStatus === "feito" ? "pendente" : "feito";
+                const newStatus = currentStatus === "feito" ? "pendente" : "feito";
+                entries[sector][entryIndex].status = newStatus;
                 
                 // Save changes to localStorage
                 saveData();
                 
+                // Enviar notificações por email para usuários que optaram por receber
+                sendEmailNotifications(sector, entries[sector][entryIndex], 'status');
+                
                 // Show status change confirmation
-                const newStatus = entries[sector][entryIndex].status === "feito" ? "Concluído" : "Pendente";
-                showAlert(`Status alterado para ${newStatus}`, 'success');
+                const statusText = newStatus === "feito" ? "Concluído" : "Pendente";
+                showAlert(`Status alterado para ${statusText}`, 'success');
                 
                 // Update the display
                 showSectorEntries(sector);
@@ -1225,6 +1463,9 @@
                     
                     // Save to localStorage
                     saveData();
+                    
+                    // Enviar notificações por email para usuários que optaram por receber
+                    sendEmailNotifications(currentEditSector, entries[currentEditSector][entryIndex], 'edit');
                     
                     // Show success message
                     showAlert('Descrição atualizada com sucesso!', 'success');
@@ -1319,6 +1560,133 @@
             }
         }
 
+        // Função para salvar configurações de notificação
+        function saveNotificationSettings() {
+            if (!currentUser) {
+                showAlert('Você precisa estar logado para salvar configurações.', 'error');
+                return;
+            }
+            
+            const emailNotifications = document.getElementById('settings-email-notifications').checked;
+            const notificationEmail = document.getElementById('notification-email').value;
+            const notifyNewEntries = document.getElementById('notify-new-entries').checked;
+            const notifyStatusChanges = document.getElementById('notify-status-changes').checked;
+            
+            if (emailNotifications && !notificationEmail) {
+                showAlert('Por favor, informe um email para receber notificações.', 'error');
+                return;
+            }
+            
+            // Atualizar configurações do usuário atual
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex].emailNotifications = emailNotifications;
+                users[userIndex].email = notificationEmail || users[userIndex].email;
+                users[userIndex].notifyNewEntries = notifyNewEntries;
+                users[userIndex].notifyStatusChanges = notifyStatusChanges;
+                
+                // Atualizar usuário atual
+                currentUser = users[userIndex];
+                
+                // Salvar no localStorage
+                saveData();
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showAlert('Configurações salvas com sucesso!', 'success');
+            }
+        }
+
+        // Função para enviar notificações por email
+        function sendEmailNotifications(sector, entry, type) {
+            // Filtrar usuários que optaram por receber notificações
+            const usersToNotify = users.filter(user => {
+                if (!user.emailNotifications || !user.email) return false;
+                
+                if (type === 'new' && !user.notifyNewEntries) return false;
+                if (type === 'status' && !user.notifyStatusChanges) return false;
+                
+                // Não notificar o próprio usuário que fez a alteração
+                if (currentUser && user.id === currentUser.id) return false;
+                
+                return true;
+            });
+            
+            if (usersToNotify.length === 0) return;
+            
+            // Em um ambiente real, aqui você enviaria os emails usando um serviço de email
+            // Como estamos em um ambiente de front-end puro, vamos apenas simular o envio
+            
+            console.log(`Enviando notificações por email para ${usersToNotify.length} usuários`);
+            
+            // Preparar o assunto e corpo do email com base no tipo de notificação
+            let subject, body;
+            const sectorName = getSectorName(sector);
+            
+            if (type === 'new') {
+                subject = `Nova atividade no setor ${sectorName}`;
+                body = `
+                    Uma nova atividade foi adicionada no setor ${sectorName}:
+                    
+                    Responsável: ${entry.nome}
+                    Data: ${entry.data}
+                    Status: ${entry.status === 'feito' ? 'Concluído' : 'Pendente'}
+                    
+                    Descrição:
+                    ${entry.descricao}
+                `;
+            } else if (type === 'status') {
+                subject = `Alteração de status em atividade do setor ${sectorName}`;
+                body = `
+                    O status de uma atividade foi alterado no setor ${sectorName}:
+                    
+                    Responsável: ${entry.nome}
+                    Data: ${entry.data}
+                    Novo Status: ${entry.status === 'feito' ? 'Concluído' : 'Pendente'}
+                    
+                    Descrição:
+                    ${entry.descricao}
+                `;
+            } else if (type === 'edit') {
+                subject = `Descrição atualizada em atividade do setor ${sectorName}`;
+                body = `
+                    A descrição de uma atividade foi atualizada no setor ${sectorName}:
+                    
+                    Responsável: ${entry.nome}
+                    Data: ${entry.data}
+                    Status: ${entry.status === 'feito' ? 'Concluído' : 'Pendente'}
+                    
+                    Nova Descrição:
+                    ${entry.descricao}
+                `;
+            }
+            
+            // Simular o envio de email para cada usuário
+            usersToNotify.forEach(user => {
+                console.log(`Enviando email para: ${user.email}`);
+                console.log(`Assunto: ${subject}`);
+                console.log(`Corpo: ${body}`);
+                
+                // Em um ambiente real, você usaria um serviço de email como SendGrid, Mailgun, etc.
+                // Exemplo com fetch para uma API de email (não funcional neste ambiente):
+                /*
+                fetch('https://api.seu-servico-email.com/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: user.email,
+                        subject: subject,
+                        text: body,
+                    })
+                })
+                .then(response => response.json())
+                .then(data => console.log('Email enviado com sucesso:', data))
+                .catch(error => console.error('Erro ao enviar email:', error));
+                */
+            });
+        }
+
         // Check if user is authenticated
         document.addEventListener('DOMContentLoaded', function() {
             console.log("DOM fully loaded");
@@ -1326,6 +1694,12 @@
             const dateInput = document.getElementById('data');
             if (dateInput) {
                 dateInput.valueAsDate = new Date();
+            }
+            
+            // Carregar usuário atual do localStorage, se existir
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
             }
             
             // Always show welcome screen first, regardless of authentication status
